@@ -7,34 +7,46 @@ students, professions = functions.load_data()
 student_info = []
 profession_info = []
 
-# Ввод номера студента
-# While true нужен для правильного ввода, иначе вопрос будет задаваться из раза в раз
-while True:
-    student_number = int(input("Введите номер студента: "))
-    student_response = functions.find_student(students, student_number)
+def inputStudent():
+    """ Функция для ввода номера студента """
+    global student_info
+    while True:
+        while True:
+            student_number = input("Введите номер студента: ")
+            try:
+                student_number = int(student_number)
+                break
+            except ValueError:
+                print("Некорректный номер. Введите целое число")
+                
+        student_response = functions.find_student(students, student_number)
 
-    # Проверка ответа функции (был/не был найден)
-    if student_response == "Error":
-        print("У нас нет такого студента\nПопробуйте еще раз...\n")
-    else:
-        student_info = student_response
-        break
+        if student_response == "Error":
+            print("У нас нет такого студента\nПопробуйте еще раз...\n")
+        else:
+            student_info = student_response
+            break
+
+def inputProfession():
+    """ Функция для ввода профессии студента """
+    global profession_info
+    while True:
+        profession = input("Выберите специальность для оценки студента " + name + "\n")
+        profession_response = functions.check_profession(professions, profession)
+
+        if profession_response == "Error":
+            print("У нас нет такой специальности\nПопробуйте еще раз...\n")
+        else:
+            profession_info = profession_response
+            break
+
+
+inputStudent()
 
 # Переменные для хранения имени студента и его скилов
 name, skills = functions.show_student_info(student_info)
 
-# Ввод профессии
-# While true нужен для правильного ввода, иначе вопрос будет задаваться из раза в раз
-while True:
-    profession = input("Выберите специальность для оценки студента " + name + "\n")
-    profession_response = functions.check_profession(professions, profession)
-
-    # Проверка ответа функции (был/не был найден)
-    if profession_response == "Error":
-        print("У нас нет такой специальности\nПопробуйте еще раз...\n")
-    else:
-        profession_info = profession_response
-        break
+inputProfession()
 
 # Вызов функции, которая отобразит инфо о пригодности и что умеет/не умеет студент
 functions.profession_for_student(name, skills, profession_info)
